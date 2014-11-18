@@ -9,137 +9,68 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 using namespace std;
 
 /*
  * 
  */
-/*int main(int argc, char** argv) { // 1) remove bracket
-    cout << "Hello world" << endl;// 2) don't terminate string
-    vector<string> inputs;
-    string s;
-    while (cin >> s && s != "quit")
-        inputs.push_back(s);
-    for (string s : inputs)
-        cout << s.length() << endl;// 4) < instead of <<
-    return 0;//3) remove semicolon
-}*/
 
-//1) main.cpp:19:5: error: expected initializer before 'cout' -> bad diagnostic
-//2) main.cpp:19:5: error: missing terminating " character -> good diagnostic
-//3) main.cpp:27:1: error: expected ';' before '}' token -> good diagnostic
-//4) main.cpp:25:28: error: no match for 'operator<' (operand types are 'std::basic_ostream<char>::__ostream_type {aka std::basic_ostream<char>}' and '<unresolved overloaded function type>')
-//      -> good enough diagnostic
-/*
-enum class Operand {NONE, PLUS, MINUS, PRODUCT, DIVISION};
+class complex
+{
+public:
+    complex(double ix, double iy) : x(ix), y(iy) {};
+    friend complex operator+(complex l, const complex& r)
+    {
+        l.x += r.x;
+        l.y += r.y;
+        return l;
+    }
+    friend complex operator-(complex l, const complex& r)
+    {
+        l.x -= r.x;
+        l.y -= r.y;
+        return l;
+    }
+    friend complex operator*(complex l, const complex& r)
+    {
+        return complex(l.x * r.x - l.y * r.y, l.x * r.y + r.x * l.y);
+    }
+    friend complex operator/(complex l, const complex& r)
+    {
+        double denom = r.x * r.x + r.y * r.y;
+        if (denom == 0) throw overflow_error("Divide by zero exception");
+        return complex((l.x * r.x + l.y * r.y) / denom,
+                (l.y * r.x - l.x * r.y) / denom);
+    }
+    friend ostream& operator<<(std::ostream& os, const complex& obj)
+    {
+        os << "(" << obj.x << ", " << obj.y << ")";
+        return os;
+    }
+
+private:
+    double x;
+    double y;
+};
 
 int main(int argc, char** argv) {
-    Operand op = Operand::NONE;
-    double result = 0;
-    bool firstNumber = true;
-    bool terminate = false;
-    while (!terminate)
+    double x1, x2, y1, y2;
+    cin >> x1 >> y1 >> x2 >> y2;
+    complex c1(x1, y1);
+    complex c2(x2, y2);
+    cout << c1 << " + " << c2 << " = " << (c1 + c2) << endl;
+    cout << c1 << " - " << c2 << " = " << (c1 - c2) << endl;
+    cout << c1 << " * " << c2 << " = " << (c1 * c2) << endl;
+    try
     {
-        string s;
-        double d;
-        switch (op)
-        {
-            case Operand::NONE:
-                cin >> s;
-                if (s == "+")
-                    op = Operand::PLUS;
-                if (s == "-")
-                    op = Operand::MINUS;
-                if (s == "*")
-                    op = Operand::PRODUCT;
-                if (s == "/")
-                    op = Operand::DIVISION;
-                if (s == "quit")
-                    terminate = true;
-                break;
-            case Operand::PLUS:
-                if (cin >> d)
-                    result += d;
-                break;
-            case Operand::PRODUCT:
-                if (cin >> d)
-                {
-                    if (firstNumber)
-                    {
-                        result = d;
-                        firstNumber = false;
-                    }
-                    else
-                        result *= d;
-                }
-                break;
-            case Operand::MINUS:
-                if (cin >> d)
-                {
-                    if (firstNumber)
-                    {
-                        result = d;
-                        firstNumber = false;
-                    }
-                    else
-                        result -= d;
-                }
-                break;
-            case Operand::DIVISION:
-                if (cin >> d)
-                {
-                    if (firstNumber)
-                    {
-                        result = d;
-                        firstNumber = false;
-                    }
-                    else
-                        result /= d;
-                    }
-                break;
-        }
-        if (cin.fail())
-        {
-            cin.clear();
-            char c;
-            cin >> c;
-            if (c == ';')
-            {
-                cout << result << endl;
-                result = 0;
-                firstNumber = true;
-                op = Operand::NONE;
-            }
-        }
+        cout << c1 << " / " << c2 << " = " << (c1 / c2) << endl;
     }
-}
-*/
-
-template<typename T>
-vector<T> reverse(vector<T> in)
-{
-    vector<T> out;
-    for (int i = in.size() - 1; i >= 0; i--)
-        out.push_back(in[i]);
-    return out;
-}
-
-template<typename T>
-vector<T> reverse2(vector<T> in)
-{
-    for (int i = 0; i < in.size() / 2; i++)
+    catch (overflow_error& e)
     {
-        T t = in[i];
-        in[i] = in[in.size() - 1 - i];
-        in[in.size() - 1 - i] = t;
+        cout << e.what() << endl;
+        return 1;
     }
-    return in;
-}
-
-int main(int argc, char** argv) {
-    vector<int> v = {1,2,3,4,5,6,7,8,9,10,11};
-    v = reverse2(v);
-    for (int i : v)
-        cout << i << endl;
+    return 0;
 }
