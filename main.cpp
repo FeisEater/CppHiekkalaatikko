@@ -17,6 +17,69 @@ using namespace std;
  * 
  */
 
+/*
+class MyVector {
+public:
+    MyVector(int sz) : array(new int[sz]), size(sz) {}
+    int* array;
+    int size;
+};
+
+void print(MyVector m)
+{
+    for (int i = 0; i < m.size; i++)
+        cout << m.array[i] << " ";
+    cout << endl;
+}
+
+int main(int argc, char** argv) {
+    print(5);
+    return 0;
+}
+*/
+
+class X {
+public:
+    explicit X(int j) : i(j) {cerr << "Constructed with " << j << endl;}
+    X() : i(69) {cerr << "Default construct" << endl;}
+    X(X const& x) : i(x.i) {cerr << "Copy constructed with " << x.i << endl;}
+    X& operator=(X const& x)
+    {
+        i = x.i;
+        cerr << "Copy assignment with " << x.i << endl;
+        return *this;
+    }
+    ~X() {cerr << "Destructed " << i << endl;}
+    X(X&& x) :i(x.i) {cerr << "Move constructed with " << i << endl;}
+    X& operator=(X&& x)
+    {
+        i = x.i;
+        cerr << "Move assignment with " << i << endl;
+        return *this;
+    }
+private:
+    int i;
+};
+
+#define execute(cmd) cout << "--Executing: " << #cmd << endl; cmd
+//X global_x;
+
+int main(int argc, char** argv) {
+    /*execute(X x1(5));
+    execute(X x2(x1));
+    execute(X x3(1));
+    execute(x2 = x3);
+    execute(vector<X> v(3));
+    execute(X *x4 = new X(10));
+    execute(delete(x4));*/
+    execute(vector<X> v);
+    execute(v.push_back(X(1000)));
+    execute(X x1(1));
+    execute(X x2(2));
+    execute(x2 = move(x1));
+}
+
+/*
 class complex
 {
 public:
@@ -74,3 +137,4 @@ int main(int argc, char** argv) {
     }
     return 0;
 }
+*/
