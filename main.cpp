@@ -20,7 +20,7 @@ using namespace std;
 /*
 class MyVector {
 public:
-    MyVector(int sz) : array(new int[sz]), size(sz) {}
+    explicit MyVector(int sz) : array(new int[sz]), size(sz) {}
     int* array;
     int size;
 };
@@ -50,19 +50,19 @@ public:
         return *this;
     }
     ~X() {cerr << "Destructed " << i << endl;}
-    X(X&& x) :i(x.i) {cerr << "Move constructed with " << i << endl;}
+    /*X(X&& x) :i(x.i) {cerr << "Move constructed with " << i << endl;}
     X& operator=(X&& x)
     {
         i = x.i;
         cerr << "Move assignment with " << i << endl;
         return *this;
-    }
+    }*/
 private:
     int i;
 };
 
 #define execute(cmd) cout << "--Executing: " << #cmd << endl; cmd
-//X global_x;
+X global_x;
 
 int main(int argc, char** argv) {
     /*execute(X x1(5));
